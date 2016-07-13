@@ -1,0 +1,22 @@
+<h2>{{ articles.title }}</h2>
+<p>{{ articles.content}}</p>
+<p>{{ articles.created }} </p>
+
+{% load taggit_templatetags2_tags %}
+{% get_taglist as tags for 'articles.Article' %}
+{% for tag in articles.tags.all %}
+     {{ tag.name }}
+{% endfor %}
+
+<form action="." method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" />
+</form>
+
+
+{% for comment in articles.comment_set.all %}
+	<p>{{ comment.content }}</p>
+	<p>{{ comment.created }}</p>
+{% endfor %}
+

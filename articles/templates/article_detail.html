@@ -1,0 +1,39 @@
+<html>
+<head></head>
+<body>
+
+{% if request.user.is_authenticated %}
+	<p>
+	{{request.user}} 您已經登入囉~
+		<a href="/accounts/logout/">登出</a>
+	</p>
+{% else %}
+	<p>您尚未登入喔~<a href="{% url 'django.contrib.auth.views.login' %}?next={{request.path}}">登入</a></p>
+	或是<a href="/accounts/register/">註冊</a>成為會員
+{% endif %}
+
+
+
+<h2>{{ articles.title }}</h2>
+<p>發文者 {{ articles.author }}</p>
+<p>{{ articles.content}}</p>
+<p>{{ articles.created }}</p>
+
+{% load taggit_templatetags2_tags %}
+{% get_taglist as tags for 'articles.Article' %}
+{% for tag in articles.tags.all %}
+	{{ tag.name }} 
+{% endfor %}
+
+{% if request.user.is_authenticated %}
+<p><a href="{% url 'create_comment' pk=articles.pk %}">回應文章</a></p>
+{% endif %}
+
+{% for comment in articles.comment_set.all %}
+	<p>{{ forloop.counter }}樓</p>
+	<p>{{ comment.content }}</p>
+	<p>回應者 {{ comment.author }}｜{{ comment.created }}</p>
+{% endfor %}
+
+</body>
+</html>

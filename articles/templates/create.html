@@ -1,0 +1,12 @@
+{% load taggit_templatetags2_tags %}
+{% get_taglist as tags for 'articles.Article' %}
+<ul>
+{% for tag in tags %}
+{{tag}} ({{tag.num_times}})
+{% endfor %}
+
+<form action="." method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" />
+</form>

@@ -1,0 +1,41 @@
+<h1>註冊新帳號</h1>
+
+
+<form action="" method="post">
+	{% csrf_token %}
+    <p>
+    <label for="username">帳號：</label>
+    {{ form.username}}
+    </p>
+
+    <p>
+    <label for="password1">密碼：</label>
+    {{ form.password1 }}
+    </p>
+
+    <p>
+    <label for="password2">密碼確認：</label>
+    {{ form.password2 }}
+    </p>
+
+    <p> 
+    <label for="email">信箱：</label>
+    {{ form.email }}
+    </p>
+    
+    
+    <p> 
+    <label for="last_name">姓：</label>
+    {{ form.last_name }}
+    </p>
+
+
+    <p> 
+    <label for="first_name">名：</label>
+    {{ form.first_name }}
+    </p>
+
+
+
+    <input type = "submit" value = "註冊" />
+</form>
