@@ -15,6 +15,9 @@ class Article(models.Model):
 	def __str__(self):
 		return self.title
 		
+	class Meta:
+		ordering = ['-created']
+		
 
 		
 class Comment(models.Model):
@@ -27,12 +30,4 @@ class Comment(models.Model):
 		return self.content
 		
 
-class HashTag(models.Model):
-	name = models.CharField(max_length=20)
-	
-	def __str__(self):
-		return self.title
 		
-class HashTagRelationship(models.Model):
-	article = models.ForeignKey(Article)
-	hashtag = models.ForeignKey(HashTag)

@@ -1,9 +1,14 @@
 {% load taggit_templatetags2_tags %}
-{% get_taglist as tags for 'articles.Article' %}
+{% get_tagcloud as tags for 'articles.Article' %}
+
 <ul>
-{% for tag in tags %}
-{{tag}} ({{tag.num_times}})
-{% endfor %}
+        <ul>
+          {% for tag in tags %}
+            <li><a href="{% url 'tagged' tag.slug %}">{{tag}}</a>({{tag.num_times}})</li>
+          {% empty %}
+            <li>No Tags</li>
+          {% endfor %}
+        </ul>
 </ul>
 	{% if request.user.is_authenticated %}
 		<p>

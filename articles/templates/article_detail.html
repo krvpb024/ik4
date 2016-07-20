@@ -25,6 +25,8 @@
 	{{ tag.name }} 
 {% endfor %}
 
+
+
 {% if request.user.is_authenticated %}
 <p><a href="{% url 'create_comment' pk=articles.pk %}">回應文章</a></p>
 {% endif %}

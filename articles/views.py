@@ -2,11 +2,12 @@ from django.shortcuts import get_object_or_404, render, HttpResponseRedirect
 from django.views.generic import TemplateView
 from django import forms
 from django.contrib.auth.decorators import login_required
+from django.views.generic.list import ListView
+from taggit.models import Tag
 
 # Create your views here.
 from . import forms
 from .models import Article
-
 
 def article_list(request):
 	articles = Article.objects.all()
@@ -14,7 +15,15 @@ def article_list(request):
 
 def article_detail(request, pk):
 	articles = get_object_or_404(Article, pk=pk)
-	return render(request, 'article_detail.html', {'articles':articles})	
+	return render(request, 'article_detail.html', {'articles':articles})
+		
+		
+def tagged(request, slug):
+	tags = get_object_or_404(Tag, slug=slug)
+	articles = Article.objects.filter(tags__slug=slug)
+	context = {'tags': tags, 'articles': articles}
+	return render(request, 'article_list.html', context)
+    
 	
 @login_required
 def create(request):
@@ -25,20 +34,11 @@ def create(request):
 		if form.is_valid():
 			new_article = form.save(commit=False)
 			new_article.author = request.user
-			new_article.save()
+			new_article = form.save()
 			return HttpResponseRedirect('/article/' + str(new_article.pk))
 	return render(request, 'create.html', {'form': form})
-	
-"""
-	def create_HashTag(request):
-		form = forms.HashTagForm()
-		if request.method == 'POST':
-			form = forms.HashTagForm(request.POST)
-			if form.is_valid():
-				if form[0] == "#":
-					new_hashtag = form.cleaned_data['name'].split(" ")
-"""	
-	
+
+
 @login_required
 def create_comment(request, pk):
 	articles = get_object_or_404(Article, pk=pk)

@@ -27,25 +27,3 @@ class CommentForm(forms.ModelForm):
         "content":"回應內容",
     	}
     	
-class HashTagForm(forms.ModelForm):
-	class Meta:
-		model = models.HashTag
-		fields = [
-		'name',
-		]
-		labels = {
-        "name":"標籤",
-    	}
-    	
-'''
-HashTagInlineformset = forms.inlineformset_factory(
-	models.Article,
-	models.HashTag,
-	max_num=1,
-	fields = [
-	'title',
-	'content',
-	'name',
-	]
-)
-'''

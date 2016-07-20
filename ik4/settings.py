@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'articles',
     'taggit_templatetags2',
     'bootstrap3',
+    'tagulous',
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -129,3 +130,12 @@ os.path.dirname(__file__),
 'static',
 ),
 )
+
+SERIALIZATION_MODULES = {
+    'xml':    'tagulous.serializers.xml_serializer',
+    'json':   'tagulous.serializers.json',
+    'python': 'tagulous.serializers.python',
+    'yaml':   'tagulous.serializers.pyyaml',
+}
+
+TAGGIT_TAG_CLOUD_ORDER_BY = '-num_times'
