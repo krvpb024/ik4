@@ -1,0 +1,16 @@
+{% load taggit_templatetags2_tags %}
+{% get_tagcloud as tags for 'articles.Article' %}
+
+{% for article in articles %}
+	<h2><a href="{% url 'detail' pk=article.pk %}">{{ article.title }}</a></h2>
+	<p>發文者 <a href="/profile_view/{{ article.author }}">{{ article.author }}</a>｜回應({{ article.comment_set.all|length }})｜{{ article.created }}</p>
+	{% for tag in article.tags.all %}
+		<a href="{% url 'tagged' tag.slug %}">{{ tag.name }}</a>
+    {% endfor %}
+{% endfor %}
+
+{% for comment in comments %}
+	<p><a href="{% url 'detail' pk=comment.article.pk %}">{{ comment.article }}</a></p>
+	<p>{{ comment.content }}</p>
+	<p>回應者 <a href="/profile_view/{{ comment.author }}">{{ comment.author }}</a>｜{{ comment.created }}</p>
+{% endfor %}

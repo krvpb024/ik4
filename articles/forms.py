@@ -27,3 +27,4 @@ class CommentForm(forms.ModelForm):
         "content":"回應內容",
     	}
     	
+    	

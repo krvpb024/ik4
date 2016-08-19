@@ -11,10 +11,11 @@ class Article(models.Model):
 	content = models.TextField()
 	tags = TaggableManager()
 	created = models.DateTimeField(auto_now_add=True)
+	likes = models.ManyToManyField(User, related_name="likes")
 	
 	def __str__(self):
-		return self.title
-		
+		return self.title	
+	
 	class Meta:
 		ordering = ['-created']
 		
@@ -30,4 +31,3 @@ class Comment(models.Model):
 		return self.content
 		
 
-		

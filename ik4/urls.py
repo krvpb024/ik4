@@ -18,6 +18,7 @@ from django.contrib import admin
 from django.contrib.auth.views import login
 from .views import index, logout, register
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+from . import views
 
 urlpatterns = [
 	url(r'^article/', include('articles.urls')),
@@ -26,6 +27,7 @@ urlpatterns = [
 	url(r'^accounts/logout/$',logout),
 	url(r'^index/$',index),
 	url(r'^accounts/register/$',register),
+	url(r'^profile_view/(?P<author_id>\w+)/$', views.user_profile, name='user_profile'),
 ]
 
 

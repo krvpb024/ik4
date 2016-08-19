@@ -15,16 +15,21 @@
 
 
 <h2>{{ articles.title }}</h2>
-<p>發文者 {{ articles.author }}</p>
+<p>發文者 <a href="/profile_view/{{ articles.author }}">{{ articles.author }}</a></p>
 <p>{{ articles.content}}</p>
 <p>{{ articles.created }}</p>
+
+
 
 {% load taggit_templatetags2_tags %}
 {% get_taglist as tags for 'articles.Article' %}
 {% for tag in articles.tags.all %}
-	{{ tag.name }} 
+	<a href="{% url 'tagged' tag.slug %}">{{ tag.name }}</a>
 {% endfor %}
 
+{% if request.user.is_authenticated %}
+<p><a href="{% url 'article_edit' article_pk=articles.pk %}">編輯</a></p>
+{% endif %}
 
 
 {% if request.user.is_authenticated %}
@@ -34,7 +39,7 @@
 {% for comment in articles.comment_set.all %}
 	<p>{{ forloop.counter }}樓</p>
 	<p>{{ comment.content }}</p>
-	<p>回應者 {{ comment.author }}｜{{ comment.created }}</p>
+	<p>回應者 <a href="/profile_view/{{ comment.author }}">{{ comment.author }}</a>｜{{ comment.created }}</p>
 {% endfor %}
 
 </body>

@@ -13,6 +13,7 @@ def article_list(request):
 	articles = Article.objects.all()
 	return render(request, 'article_list.html', {'articles':articles})
 
+
 def article_detail(request, pk):
 	articles = get_object_or_404(Article, pk=pk)
 	return render(request, 'article_detail.html', {'articles':articles})
@@ -40,6 +41,18 @@ def create(request):
 
 
 @login_required
+def article_edit(request, article_pk):
+	article = get_object_or_404(Article, pk=article_pk)
+	form = forms.ArticleForm(instance=article)
+	
+	if request.method =='POST':
+		form = forms.ArticleForm(instance=article, data=request.POST)
+		if form.is_valid():
+			form.save()
+			return HttpResponseRedirect('/article/' + str(article.pk))
+	return render(request, 'create.html', {'form': form})
+
+@login_required
 def create_comment(request, pk):
 	articles = get_object_or_404(Article, pk=pk)
 	form = forms.CommentForm
@@ -53,3 +66,5 @@ def create_comment(request, pk):
 			comment.save()
 			return HttpResponseRedirect('/article/' + str(pk))
 	return render(request, 'create_comment.html', {'form': form, 'articles':articles})
+	
+	
