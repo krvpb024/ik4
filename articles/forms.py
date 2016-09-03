@@ -3,6 +3,7 @@ from django import forms
 from . import models
 
 class ArticleForm(forms.ModelForm):
+
 	class Meta:
 		model = models.Article
 		fields = [
@@ -14,6 +15,9 @@ class ArticleForm(forms.ModelForm):
         "title": "標題",
         "content":"內容",
         "tags":"標籤",
+    	}
+		help_texts = {
+    	'tags':'使用逗號區隔'
     	}
     	
 		

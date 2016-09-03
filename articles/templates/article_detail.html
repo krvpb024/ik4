@@ -12,7 +12,13 @@
 	或是<a href="/accounts/register/">註冊</a>成為會員
 {% endif %}
 
-
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    {{ message }}
+    {% endfor %}
+</ul>
+{% endif %}
 
 <h2>{{ articles.title }}</h2>
 <p>發文者 <a href="/profile_view/{{ articles.author }}">{{ articles.author }}</a></p>
@@ -28,9 +34,10 @@
 {% endfor %}
 
 {% if request.user.is_authenticated %}
-<p><a href="{% url 'article_edit' article_pk=articles.pk %}">編輯</a></p>
+	{% if request.user = articles.author %}
+		<p><a href="{% url 'article_edit' article_pk=articles.pk %}">編輯</a></p>
+	{% endif %}
 {% endif %}
-
 
 {% if request.user.is_authenticated %}
 <p><a href="{% url 'create_comment' pk=articles.pk %}">回應文章</a></p>

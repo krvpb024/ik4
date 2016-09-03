@@ -19,6 +19,17 @@ from django.contrib.auth.views import login
 from .views import index, logout, register
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from . import views
+from django.contrib.auth import views as auth_views
+from django.contrib.auth.views import (
+    password_reset, 
+    password_reset_done,
+    password_reset_confirm, 
+    password_reset_complete,
+    # these are the two new imports
+    password_change,
+    password_change_done,
+)
+
 
 urlpatterns = [
 	url(r'^article/', include('articles.urls')),
@@ -28,7 +39,13 @@ urlpatterns = [
 	url(r'^index/$',index),
 	url(r'^accounts/register/$',register),
 	url(r'^profile_view/(?P<author_id>\w+)/$', views.user_profile, name='user_profile'),
+	url(r'^profile_edit/(?P<user_name>\w+)/$', views.edit_profile, name='edit_profile'),
+    url(r'^password/change/(?P<user_name>\w+)/$', views.password_change, name='password_change'),
+    url(r'^accounts/password/change/done/$', password_change_done, 
+        {'template_name': 'registration/password_change_done.html'},
+        name='password_change_done'),
 ]
+
 
 
 urlpatterns += staticfiles_urlpatterns()

@@ -12,8 +12,17 @@
 </ul>
 	{% if request.user.is_authenticated %}
 		<p>
-		{{request.user}} 您已經登入囉~
-			<a href="/accounts/logout/">登出</a>
+		<a href="{% url 'user_profile' request.user %}">{{request.user}}</a> 您已經登入囉~
+
+
+				<a href="{% url 'edit_profile' user.username %}">編輯個人資料</a>
+
+	
+	<a href="{% url 'password_change' user.username %}">
+    	更改密碼
+	</a>
+	
+				<a href="/accounts/logout/">登出</a>
 		</p>
 
 	{% else %}

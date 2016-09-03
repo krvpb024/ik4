@@ -4,6 +4,7 @@ from django import forms
 from django.contrib.auth.decorators import login_required
 from django.views.generic.list import ListView
 from taggit.models import Tag
+from django.contrib import messages
 
 # Create your views here.
 from . import forms
@@ -36,6 +37,7 @@ def create(request):
 			new_article = form.save(commit=False)
 			new_article.author = request.user
 			new_article = form.save()
+			messages.add_message(request, messages.INFO, '文章發表完成')
 			return HttpResponseRedirect('/article/' + str(new_article.pk))
 	return render(request, 'create.html', {'form': form})
 
@@ -43,12 +45,18 @@ def create(request):
 @login_required
 def article_edit(request, article_pk):
 	article = get_object_or_404(Article, pk=article_pk)
+	author = article.author
 	form = forms.ArticleForm(instance=article)
+	
+	if author != request.user:
+		messages.add_message(request, messages.INFO, '你並非發文者，無編輯此文章權限')
+		return HttpResponseRedirect('/article/' + str(article.pk))
 	
 	if request.method =='POST':
 		form = forms.ArticleForm(instance=article, data=request.POST)
 		if form.is_valid():
 			form.save()
+			messages.add_message(request, messages.INFO, '編輯完成')
 			return HttpResponseRedirect('/article/' + str(article.pk))
 	return render(request, 'create.html', {'form': form})
 
@@ -64,6 +72,7 @@ def create_comment(request, pk):
 			comment.article = articles
 			comment.author = request.user
 			comment.save()
+			messages.add_message(request, messages.INFO, '回應發表完成')
 			return HttpResponseRedirect('/article/' + str(pk))
 	return render(request, 'create_comment.html', {'form': form, 'articles':articles})
 	

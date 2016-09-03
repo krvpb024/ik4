@@ -1,6 +1,25 @@
 {% load taggit_templatetags2_tags %}
 {% get_tagcloud as tags for 'articles.Article' %}
 
+
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    {{ message }}
+    {% endfor %}
+</ul>
+{% endif %}
+
+{% if request.user = articles.author %}
+	{% if request.user.is_authenticated %}
+				<a href="{% url 'edit_profile' user.username %}">編輯個人資料</a>
+	{% endif %}
+	
+	<a href="{% url 'password_change' user.username %}">
+    	更改密碼
+	</a>
+{% endif %}
+
 {% for article in articles %}
 	<h2><a href="{% url 'detail' pk=article.pk %}">{{ article.title }}</a></h2>
 	<p>發文者 <a href="/profile_view/{{ article.author }}">{{ article.author }}</a>｜回應({{ article.comment_set.all|length }})｜{{ article.created }}</p>
