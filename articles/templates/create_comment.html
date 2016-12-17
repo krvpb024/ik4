@@ -1,11 +1,16 @@
-<h2>{{ articles.title }}</h2>
+{% extends 'base.html' %}
+{% block content %}
+
+<h2>{{ articles.title }}</h2>發文者 <a href="/profile_view/{{ articles.author }}">{{ articles.author }}</a>
+<hr/>
 <p>{{ articles.content}}</p>
-<p>{{ articles.created }} </p>
+<hr/>
+<p>{{ articles.created }}</p>
 
 {% load taggit_templatetags2_tags %}
 {% get_taglist as tags for 'articles.Article' %}
 {% for tag in articles.tags.all %}
-     {{ tag.name }}
+     <a href="{% url 'tagged' tag.slug %}" class="tag tag-default">{{ tag.name }}</a>
 {% endfor %}
 
 <form action="." method="POST">
@@ -16,7 +21,9 @@
 
 
 {% for comment in articles.comment_set.all %}
+	<p>{{ forloop.counter }}樓</p>
 	<p>{{ comment.content }}</p>
-	<p>{{ comment.created }}</p>
+	<p>回應者 <a href="/profile_view/{{ comment.author }}">{{ comment.author }}</a>｜{{ comment.created }}</p>
 {% endfor %}
 
+{% endblock %}

@@ -5,13 +5,22 @@ from django.contrib.auth.decorators import login_required
 from django.views.generic.list import ListView
 from taggit.models import Tag
 from django.contrib import messages
+from django.db.models import Q
 
 # Create your views here.
 from . import forms
-from .models import Article
+from .models import Article, Comment
 
 def article_list(request):
 	articles = Article.objects.all()
+	query = request.GET.get('q')
+	if query:
+		articles = Article.objects.filter(
+			Q(title__icontains=query)|
+			Q(content__icontains=query)|
+			Q(author__username__iexact=query)|
+			Q(tags__name__icontains=query)
+			).distinct()
 	return render(request, 'article_list.html', {'articles':articles})
 
 
@@ -25,7 +34,35 @@ def tagged(request, slug):
 	articles = Article.objects.filter(tags__slug=slug)
 	context = {'tags': tags, 'articles': articles}
 	return render(request, 'article_list.html', context)
-    
+
+@login_required
+def article_delete(request, pk):
+	articles = get_object_or_404(Article, pk=pk)
+	author = articles.author
+	
+	if author != request.user:
+		messages.add_message(request, messages.INFO, '你並非發文者，無刪除此文章權限')
+		return HttpResponseRedirect('/article/' + str(articles.pk))
+	else:
+		articles.delete()
+		messages.add_message(request, messages.INFO, '文章已刪除')
+		return HttpResponseRedirect('/article/')
+	return render(request, 'article_detail.html', {'articles': articles})
+
+@login_required
+def comment_delete(request, pk):
+	comment = get_object_or_404(Comment, pk=pk)
+	articles = comment.article
+	comment_author = comment.author
+	
+	if comment_author != request.user:
+		messages.add_message(request, messages.INFO, '你並非回應者，無刪除此回應權限')
+		return HttpResponseRedirect('/article/' + str(articles.pk))
+	else:
+		comment.delete()
+		messages.add_message(request, messages.INFO, '回應已刪除')
+		return HttpResponseRedirect('/article/' + str(articles.pk))
+	return render(request, 'article_detail.html', {'articles': articles})
 	
 @login_required
 def create(request):

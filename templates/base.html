@@ -1,15 +1,123 @@
-{% load staticfiles %}
-<html>
-<head>
-<link href="{% static 'bootstrap/css/bootstrap.min.css' %}"
-rel="stylesheet" media="screen" />">
-</head>
+{% load taggit_templatetags2_tags %}
+{% get_tagcloud as tags for 'articles.Article' %}
 
-<body>
+
+<style>
+.content {
+	: 50px;
+
+}
+
+</style>
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../favicon.ico">
+
+    <title>ik4</title>
+
+    <!-- Bootstrap core CSS -->
+    
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.5/css/bootstrap.min.css" integrity="sha384-AysaV+vQoT3kOAXZkl02PThvDr8HYKPZhNT5h/CXfBThSRXQ6jW5DO2ekP5ViFdi" crossorigin="anonymous">
+
+
+  </head>
+
+  <body>
+    <nav class="navbar navbar-dark bg-inverse">
+      <div class="container">
+        <a class="navbar-brand" href="{% url 'index' %}">ik4</a>
+        <ul class="nav navbar-nav">
+              {% if request.user.is_authenticated %}
+      <li class="nav-item "><a href="{% url 'create' %}" class="nav-link">發表文章</a></li>
+
+      {% endif %}
+        </ul>
+        <ul class="nav navbar-nav float-xs-right">
+        	{% if request.user.is_authenticated %}
+		
+			<li class="nav-item "><a href="{% url 'user_profile' request.user %}" class="nav-link">{{request.user}}</a></li>
+
+
+			<li class="nav-item "><a href="{% url 'edit_profile' user.username %}" class="nav-link">編輯個人資料</a></li>
+
+
+			<li class="nav-item "><a href="{% url 'password_change' user.username %}" class="nav-link">
+			更改密碼
+			</a></li>
+	
+			<li class="nav-item "><a href="/accounts/logout/" class="nav-link">登出</a></li>
+
+	{% else %}
+		<li class="nav-item "><a href="{% url 'django.contrib.auth.views.login' %}?next={{request.path}}" class="nav-link">登入</a></li>
+		<li class="nav-item "><a href="/accounts/register/" class="nav-link">註冊</a></li>
+	{% endif %}
+        </ul>
+      </div><!-- /.container -->
+    </nav><!-- /.navbar -->
+
+    <div class="content">
+    <div class="container">
+
+      <div class="row row-offcanvas row-offcanvas-right">
+
+        <div class="col-xs-12 col-sm-9">
+          <p class="float-xs-right hidden-sm-up">
+            <button type="button" class="btn btn-primary btn-sm" data-toggle="offcanvas">Toggle nav</button>
+          </p>
+
+          <div class="row">
+            <div class="col-xs-6 col-lg-12">
+            <br/>
+            
+
 {% block content %}
-<h1 class="text-info">">HELLO DJANGO!</h1>
 {% endblock %}
+            </div><!--/span-->
 
-<script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
-</body>
+          </div><!--/row-->
+        </div><!--/span-->
+
+        <div class="col-xs-6 col-sm-3 sidebar-offcanvas" id="sidebar">
+          <div class="list-group">
+
+          {% for tag in tags %}
+            <a href="{% url 'tagged' tag.slug %}" class="list-group-item">{{tag}}({{tag.num_times}})</a>
+          {% empty %}
+            No Tags
+          {% endfor %}
+            
+          </div>
+        </div><!--/span-->
+      </div><!--/row-->
+
+      <hr>
+
+      <footer>
+        <p>&copy; {% now "Y" %}</p>
+      </footer>
+
+    </div><!--/.container-->
+</div>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.0.0/jquery.min.js" integrity="sha384-THPy051/pYDQGanwU6poAc/hOdQxjnOEXzbT+OuUAFqNqFjL+4IGLBgCJC3ZOShY" crossorigin="anonymous"></script>
+    <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.2.0/js/tether.min.js" integrity="sha384-Plbmg8JY28KFelvJVai01l8WyZzrYWG825m+cZ0eDDS1f7d/js6ikvy1+X+guPIB" crossorigin="anonymous"></script>
+    
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    
+    
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.5/js/bootstrap.min.js" integrity="sha384-BLiI7JTZm+JWlgKa0M0kGRpJbF2J8q+qreVrKBC47e3K6BW78kGLrCkeRX6I9RoK" crossorigin="anonymous"></script>
+  </body>
 </html>

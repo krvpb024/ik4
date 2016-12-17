@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from django.core.exceptions import ValidationError
-from django.contrib.auth.forms import PasswordChangeForm, SetPasswordForm
+from django.contrib.auth.forms import PasswordChangeForm
 
 class PasswordChangeForm(forms.Form):
 	old_password = forms.CharField(required=True, widget=forms.PasswordInput())
@@ -37,6 +37,8 @@ class PasswordChangeForm(forms.Form):
 			self.user.save()
 		return self.user
 	
+	
+
 class UserCreateForm(UserCreationForm):
     email = forms.EmailField(required=True)
     last_name = forms.CharField(max_length=10)

@@ -1,16 +1,10 @@
+{% extends 'base.html' %}
+
 <html>
 <head></head>
 <body>
+{% block content %}
 
-{% if request.user.is_authenticated %}
-	<p>
-	{{request.user}} 您已經登入囉~
-		<a href="/accounts/logout/">登出</a>
-	</p>
-{% else %}
-	<p>您尚未登入喔~<a href="{% url 'django.contrib.auth.views.login' %}?next={{request.path}}">登入</a></p>
-	或是<a href="/accounts/register/">註冊</a>成為會員
-{% endif %}
 
 {% if messages %}
 <ul class="messages">
@@ -20,9 +14,16 @@
 </ul>
 {% endif %}
 
-<h2>{{ articles.title }}</h2>
-<p>發文者 <a href="/profile_view/{{ articles.author }}">{{ articles.author }}</a></p>
-<p>{{ articles.content}}</p>
+<h2>{{ articles.title }}</h2>發文者 <a href="/profile_view/{{ articles.author }}">{{ articles.author }}</a>
+{% if request.user.is_authenticated %}
+	{% if request.user == articles.author %}
+		<p><a href="{% url 'article_edit' article_pk=articles.pk %}">編輯</a> 
+		<a href="{% url 'delete' pk=articles.pk %}">刪除文章</a></p>
+	{% endif %}
+{% endif %}
+<hr/>
+<p>{{ articles.content|linebreaks}}</p>
+<hr/>
 <p>{{ articles.created }}</p>
 
 
@@ -30,14 +31,10 @@
 {% load taggit_templatetags2_tags %}
 {% get_taglist as tags for 'articles.Article' %}
 {% for tag in articles.tags.all %}
-	<a href="{% url 'tagged' tag.slug %}">{{ tag.name }}</a>
+	<a href="{% url 'tagged' tag.slug %}" class="tag tag-default">{{ tag.name }}</a>
 {% endfor %}
 
-{% if request.user.is_authenticated %}
-	{% if request.user = articles.author %}
-		<p><a href="{% url 'article_edit' article_pk=articles.pk %}">編輯</a></p>
-	{% endif %}
-{% endif %}
+
 
 {% if request.user.is_authenticated %}
 <p><a href="{% url 'create_comment' pk=articles.pk %}">回應文章</a></p>
@@ -46,8 +43,13 @@
 {% for comment in articles.comment_set.all %}
 	<p>{{ forloop.counter }}樓</p>
 	<p>{{ comment.content }}</p>
+	{% if request.user == comment.author %}
+	<a href="{% url 'comment_delete' pk=comment.pk%}">刪除回應</a>
+	{% endif %}
 	<p>回應者 <a href="/profile_view/{{ comment.author }}">{{ comment.author }}</a>｜{{ comment.created }}</p>
 {% endfor %}
 
 </body>
 </html>
+
+{% endblock %}

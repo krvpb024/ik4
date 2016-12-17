@@ -1,3 +1,5 @@
+{% extends 'base.html' %}
+{% block content %}
 {% if form.errors %}
     {% for field in form %}
         {% for error in field.errors %}
@@ -23,3 +25,4 @@
         <input type="submit" value="登入" />
 
 </form>
+{% endblock %}

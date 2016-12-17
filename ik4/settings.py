@@ -40,8 +40,7 @@ INSTALLED_APPS = [
     'taggit',
     'articles',
     'taggit_templatetags2',
-    'bootstrap3',
-    'tagulous',
+    
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -111,7 +110,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Hong_Kong'
 
 USE_I18N = True
 
@@ -124,12 +123,16 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
 
 STATIC_URL = '/static/'
-STATICFILES_DIRS = (
-os.path.join(
-os.path.dirname(__file__),
-'static',
-),
-)
+
+# 可以放公用的static，例如custom css 用 collect static就會被複製進STATIC_ROOT
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "custom_static")
+    #'/var/www/static/',
+]
+
+# 真的使用的檔案
+STATIC_ROOT = os.path.join(BASE_DIR, "static")
+
 
 SERIALIZATION_MODULES = {
     'xml':    'tagulous.serializers.xml_serializer',
@@ -139,3 +142,4 @@ SERIALIZATION_MODULES = {
 }
 
 TAGGIT_TAG_CLOUD_ORDER_BY = '-num_times'
+

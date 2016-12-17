@@ -8,7 +8,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
 def index(request):
-    return render_to_response('index.html',locals())
+    return HttpResponseRedirect('/article/')
     
     
 def logout(request):
@@ -50,7 +50,7 @@ def edit_profile(request, user_name):
 			messages.add_message(request, messages.INFO, '編輯完成')
 			return HttpResponseRedirect('/profile_view/' + str(user.username))
 	return render(request, 'edit_profile.html', {'form': form})
-	
+
 
 
 
@@ -66,9 +66,8 @@ def password_change(request, user_name):
 		form = PasswordChangeForm(user=request.user, data=request.POST)
 		if form.is_valid():
 			form.save()
-			update_session_auth_hash(request, form.user)
-			messages.add_message(request, messages.INFO, '密碼更改完成')
-			return HttpResponseRedirect('/profile_view/' + str(user.username))
+			messages.add_message(request, messages.INFO, '密碼更改完成，請重新登入')
+			return HttpResponseRedirect('/article/')
 	else:
 		form = PasswordChangeForm(user=request.user)	
 	return render(request, 'password_change_form.html', {'form': form})

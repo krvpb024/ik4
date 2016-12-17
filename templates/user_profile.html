@@ -1,3 +1,6 @@
+
+{% extends 'base.html' %}
+{% block content %}
 {% load taggit_templatetags2_tags %}
 {% get_tagcloud as tags for 'articles.Article' %}
 
@@ -10,26 +13,28 @@
 </ul>
 {% endif %}
 
-{% if request.user = articles.author %}
-	{% if request.user.is_authenticated %}
-				<a href="{% url 'edit_profile' user.username %}">編輯個人資料</a>
-	{% endif %}
-	
-	<a href="{% url 'password_change' user.username %}">
-    	更改密碼
-	</a>
-{% endif %}
+<h1>{{ request.user }} Profile</h1>
+<br/>
 
+<div class="row">
+<div class="col-lg-6">
+<h3>{{ request.user }} 所發表的文章</h3>
 {% for article in articles %}
 	<h2><a href="{% url 'detail' pk=article.pk %}">{{ article.title }}</a></h2>
 	<p>發文者 <a href="/profile_view/{{ article.author }}">{{ article.author }}</a>｜回應({{ article.comment_set.all|length }})｜{{ article.created }}</p>
 	{% for tag in article.tags.all %}
-		<a href="{% url 'tagged' tag.slug %}">{{ tag.name }}</a>
+		<a href="{% url 'tagged' tag.slug %}" class="tag tag-default">{{ tag.name }}</a>
     {% endfor %}
 {% endfor %}
-
+</div>
+<div class="col-lg-6">
+<h3>{{ request.user }} 所發表的回應</h3>
 {% for comment in comments %}
 	<p><a href="{% url 'detail' pk=comment.article.pk %}">{{ comment.article }}</a></p>
 	<p>{{ comment.content }}</p>
 	<p>回應者 <a href="/profile_view/{{ comment.author }}">{{ comment.author }}</a>｜{{ comment.created }}</p>
 {% endfor %}
+</div>
+
+</div>
+{% endblock %}
